@@ -1,0 +1,72 @@
+ ---KPIs generals
+
+select
+sum (sales) as total_sales,
+count (distinct Order_ID) as total_orders,
+count (distinct Customer_ID) as total_customers
+from train
+
+
+---sales per month
+
+    SELECT
+        product_name,
+        YEAR(order_date) AS year,
+        MONTH(order_date) AS month,
+        SUM(sales) AS monthly_sale
+    FROM train
+    GROUP BY
+        product_name,
+        YEAR(order_date),
+        MONTH(order_date)
+    ORDER BY
+        year,
+        month,
+        monthly_sale DESC;
+
+  ---  best seller category
+SELECT
+  MIN(total_sales) as minimo_ventas,
+  MAX(total_sales) as maximo_ventas, 
+  AVG(total_sales) as promedio_ventas
+FROM (
+   SELECT
+     category,
+     SUM(sales) AS total_sales
+   FROM train
+   GROUP BY category
+) t;
+
+ 
+ 
+select 
+sum(sales) as sales,
+Category,
+case
+    when sum(sales) >= 371588266 then 'high'
+    when sum(sales) between 250545009 and 371588265 then 'medium'
+    else 'low'
+  end as Sales_Category
+from train
+group by Category
+order by sum(sales) asc
+
+
+---Which regions generate the most sales?
+
+select 
+sum(sales) as total_sales,
+region
+from train
+group by region
+order by sum(sales) desc
+
+
+---Which customer segments generate the most sales?
+
+select 
+segment as client,
+sum(sales) as total_sales
+from train
+group by segment
+order by sum(sales) desc
